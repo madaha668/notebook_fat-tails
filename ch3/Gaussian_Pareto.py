@@ -86,3 +86,29 @@ else:
     print("结论: 这是一个薄尾分布，可以使用标准差。")
 
  
+def plot_max_to_sum(data, name, ax):
+   # 计算累计和 (Partial Sums)
+    cumsum = np.cumsum(data)
+    # 计算累计最大值 (Running Max)
+    running_max = np.maximum.accumulate(data)
+    # 计算比例
+    ratio = running_max / cumsum
+
+    ax.plot(ratio, label=name, linewidth=1)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+
+# 高斯数据的 Max/Sum
+# 我们取绝对值，因为高斯有负数，便于比较量级
+plot_max_to_sum(np.abs(gaussian_data), "Gaussian Abs Data", ax1)
+ax1.set_title("Max-to-Sum Ratio: Gaussian")
+ax1.set_ylim(0, 1)
+ax1.set_xlabel("Number of Samples")
+
+# 帕累托数据的 Max/Sum
+plot_max_to_sum(pareto_data, "Pareto Data", ax2)
+ax2.set_title(f"Max-to-Sum Ratio: Fat Tail (alpha={alpha_tail})")
+ax2.set_ylim(0, 1)
+ax2.set_xlabel("Number of Samples")
+
+plt.show()
